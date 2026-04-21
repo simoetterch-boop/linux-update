@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberZone | عالم التقنية والأمن السيبراني</title>
+
+  <!-- ===== خطوط مميزة من Google Fonts ===== -->
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet" />
+
+  <!-- ===== FontAwesome للأيقونات ===== -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ============================================
+       متغيرات الألوان والنظام البصري
+    ============================================ */
+    :root {
+      --green:    #00ff9f;
+      --blue:     #0a84ff;
+      --purple:   #bf5af2;
+      --dark:     #050a0f;
+      --dark2:    #0b1622;
+      --dark3:    #0f1f2e;
+      --card-bg:  rgba(11, 22, 34, 0.85);
+      --border:   rgba(0, 255, 159, 0.2);
+      --text:     #c8d6e5;
+      --mono:     'Share Tech Mono', monospace;
+      --arabic:   'Tajawal', sans-serif;
+    }
+
+    /* ============================================
+       إعادة ضبط عامة
+    ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: var(--arabic);
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* ============================================
+       شريط الكانفاس لـ Matrix Rain
+    ============================================ */
+    #matrix-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      opacity: 0.07;
+      pointer-events: none;
+    }
+
+    /* ============================================
+       شريط التنقل العلوي (Navbar)
+    ============================================ */
+    nav {
+      position: fixed;
+      top: 0; width: 100%;
+      z-index: 1000;
+      background: rgba(5, 10, 15, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 1.3rem;
+      color: var(--green);
+      text-shadow: 0 0 12px var(--green);
+      letter-spacing: 2px;
+    }
+
+    .nav-logo span { color: var(--purple); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      position: relative;
+      transition: color .3s;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; right: 0;
+      width: 0; height: 2px;
+      background: var(--green);
+      transition: width .3s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* زر القائمة للجوال */
+    .menu-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--green);
+      padding: .4rem .7rem;
+      cursor: pointer;
+      font-size: 1.1rem;
+      border-radius: 4px;
+    }
+
+    /* ============================================
+       قسم الهيدر (Hero Section)
+    ============================================ */
+    #home {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 5% 40px;
+    }
+
+    .hero-content { max-width: 800px; }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: .8rem;
+      color: var(--green);
+      border: 1px solid var(--green);
+      padding: .3rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,159,.4); }
+      50%       { box-shadow: 0 0 0 8px rgba(0,255,159,0); }
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 7vw, 5rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-title .g { color: var(--green); text-shadow: 0 0 20px var(--green); }
+    .hero-title .b { color: var(--blue);  text-shadow: 0 0 20px var(--blue); }
+    .hero-title .p { color: var(--purple);text-shadow: 0 0 20px var(--purple); }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: #7a9ab5;
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn {
+      padding: .75rem 2rem;
+      border-radius: 6px;
+      font-family: var(--arabic);
+      font-size: .95rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .3s;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      color: #000;
+      border: none;
+    }
+
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,255,159,.4); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--purple);
+      border: 1px solid var(--purple);
+    }
+
+    .btn-outline:hover { background: rgba(191,90,242,.15); transform: translateY(-3px); }
+
+    /* شريط الإحصاءات */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: var(--mono);
+      font-size: 2rem;
+      color: var(--green);
+      text-shadow: 0 0 12px var(--green);
+    }
+    .stat-label { font-size: .8rem; color: #4d6880; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ============================================
+       ستايل مشترك للأقسام
+    ============================================ */
+    section {
+      position: relative;
+      padding: 100px 5%;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-tag {
+      font-family: var(--mono);
+      font-size: .78rem;
+      color: var(--green);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: .6rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .section-title span { color: var(--green); }
+
+    .section-line {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* ============================================
+       قسم لينكس (Linux Section)
+    ============================================ */
+    #linux { background: linear-gradient(180deg, var(--dark) 0%, var(--dark2) 100%); }
+
+    .linux-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      margin-bottom: 4rem;
+    }
+
+    /* placeholder الصورة */
+    .img-placeholder {
+      background: var(--dark3);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #3a5a75;
+      gap: .6rem;
+      font-size: .85rem;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .img-placeholder i { font-size: 2.5rem; color: var(--blue); opacity: .5; }
+
+    .img-placeholder.tall { min-height: 280px; }
+    .img-placeholder.short { min-height: 160px; }
+    .img-placeholder.sq { min-height: 120px; width: 120px; border-radius: 50%; }
+
+    .linux-text h3 { font-size: 1.5rem; color: #fff; margin-bottom: 1rem; }
+
+    /* بطاقات التوزيعات */
+    .distro-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .distro-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all .3s;
+      cursor: default;
+    }
+
+    .distro-card:hover {
+      border-color: var(--green);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0,255,159,.12);
+    }
+
+    .distro-icon { font-size: 2.5rem; margin-bottom: .8rem; }
+    .distro-name { font-weight: 700; color: #fff; margin-bottom: .4rem; }
+    .distro-desc { font-size: .82rem; color: #5a7a94; }
+    .distro-badge {
+      display: inline-block;
+      margin-top: .6rem;
+      padding: .15rem .6rem;
+      border-radius: 20px;
+      font-size: .72rem;
+      font-family: var(--mono);
+    }
+
+    .badge-green { background: rgba(0,255,159,.1); color: var(--green); border: 1px solid rgba(0,255,159,.3); }
+    .badge-blue  { background: rgba(10,132,255,.1); color: var(--blue);  border: 1px solid rgba(10,132,255,.3); }
+    .badge-red   { background: rgba(255,55,95,.1);  color: #ff375f;      border: 1px solid rgba(255,55,95,.3); }
+
+    /* ============================================
+       قسم الهكرز (Hackers Section)
+    ============================================ */
+    #hackers { background: var(--dark2); }
+
+    .hackers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .hacker-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(191,90,242,.2);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all .35s;
+      position: relative;
+    }
+
+    .hacker-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--blue));
+    }
+
+    .hacker-card:hover {
+      border-color: var(--purple);
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(191,90,242,.18);
+    }
+
+    .hacker-img-wrap {
+      padding: 1.5rem 1.5rem .5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .hacker-info { flex: 1; }
+    .hacker-name { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .hacker-alias {
+      font-family: var(--mono);
+      font-size: .78rem;
+      color: var(--purple);
+      margin-bottom: .4rem;
+    }
+
+    .hacker-body { padding: 0 1.5rem 1.5rem; font-size: .88rem; color: #6a8da8; }
+
+    .hacker-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .8rem; }
+    .hacker-tag {
+      font-size: .7rem;
+      padding: .2rem .6rem;
+      border-radius: 20px;
+      background: rgba(191,90,242,.1);
+      color: var(--purple);
+      border: 1px solid rgba(191,90,242,.25);
+      font-family: var(--mono);
+    }
+
+    /* ============================================
+       قسم الثغرات (Vulnerabilities Section)
+    ============================================ */
+    #vulns { background: linear-gradient(180deg, var(--dark2) 0%, var(--dark) 100%); }
+
+    .vuln-list { display: flex; flex-direction: column; gap: 2rem; }
+
+    .vuln-item {
+      background: var(--card-bg);
+      border: 1px solid rgba(10,132,255,.2);
+      border-right: 4px solid var(--blue);
+      border-radius: 12px;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      transition: all .3s;
+    }
+
+    .vuln-item:hover {
+      border-right-color: var(--green);
+      box-shadow: 4px 0 0 var(--green), 0 8px 30px rgba(0,255,159,.08);
+    }
+
+    .vuln-year {
+      font-family: var(--mono);
+      font-size: 1.4rem;
+      color: var(--blue);
+      text-align: center;
+    }
+
+    .vuln-year small { display: block; font-size: .7rem; color: #3a5a75; }
+
+    .vuln-name { font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: .4rem; }
+    .vuln-desc { font-size: .88rem; color: #5a7a94; }
+
+    .vuln-img-wrap { width: 90px; }
+
+    .vuln-damage {
+      text-align: center;
+    }
+
+    .damage-num {
+      font-family: var(--mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff375f;
+      text-shadow: 0 0 10px rgba(255,55,95,.5);
+    }
+
+    .damage-label { font-size: .7rem; color: #4d6880; }
+
+    /* شريط الخسارة */
+    .damage-bar-wrap { margin-top: .6rem; }
+    .damage-bar {
+      height: 4px;
+      background: rgba(255,55,95,.15);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .damage-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff375f, var(--purple));
+      border-radius: 2px;
+      animation: fill-bar 1.5s ease forwards;
+      width: 0;
+    }
+
+    @keyframes fill-bar { to { width: var(--w); } }
+
+    /* ============================================
+       فوتر
+    ============================================ */
+    footer {
+      position: relative;
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      padding: 3rem 5%;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: var(--mono);
+      font-size: 1.5rem;
+      color: var(--green);
+      text-shadow: 0 0 12px var(--green);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .footer-links a { color: #3a5a75; text-decoration: none; font-size: .88rem; transition: color .3s; }
+    .footer-links a:hover { color: var(--green); }
+
+    .footer-copy { font-size: .78rem; color: #2a3d50; font-family: var(--mono); }
+
+    /* ============================================
+       أنيميشن التمرير (scroll reveal)
+    ============================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================
+       استجابة الجوال
+    ============================================ */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 64px; right: 0; left: 0;
+        background: rgba(5,10,15,.97);
+        flex-direction: column;
+        padding: 1.5rem 5%;
+        border-bottom: 1px solid var(--border);
+        gap: 1.2rem;
+      }
+
+      .nav-links.open { display: flex; }
+      .menu-btn { display: block; }
+
+      .linux-intro { grid-template-columns: 1fr; }
+
+      .vuln-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .vuln-img-wrap { display: none; }
+
+      .stats-bar { gap: 1.5rem; }
+    }
+
+    /* ============================================
+       تأثير Glitch على الهيدر
+    ============================================ */
+    .glitch {
+      position: relative;
+      display: inline-block;
+    }
+
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .glitch::before {
+      color: var(--blue);
+      clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
+      transform: translateX(-3px);
+      animation: glitch-1 3s infinite;
+    }
+
+    .glitch::after {
+      color: var(--purple);
+      clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+      transform: translateX(3px);
+      animation: glitch-2 3s infinite;
+    }
+
+    @keyframes glitch-1 {
+      0%, 90%, 100% { transform: translateX(0); opacity: 0; }
+      92%           { transform: translateX(-4px); opacity: .8; }
+      94%           { transform: translateX(4px); opacity: .8; }
+      96%           { transform: translateX(0); opacity: 0; }
+    }
+
+    @keyframes glitch-2 {
+      0%, 90%, 100% { transform: translateX(0); opacity: 0; }
+      93%           { transform: translateX(4px); opacity: .8; }
+      95%           { transform: translateX(-4px); opacity: .8; }
+      97%           { transform: translateX(0); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== كانفاس Matrix Rain ===== -->
+<canvas id="matrix-canvas"></canvas>
+
+<!-- ===================================================
+     شريط التنقل
+=================================================== -->
+<nav>
+  <div class="nav-logo">&gt;<span>_</span>CyberZone</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home"><i class="fa fa-house"></i> الرئيسية</a></li>
+    <li><a href="#linux"><i class="fa-brands fa-linux"></i> لينكس</a></li>
+    <li><a href="#hackers"><i class="fa fa-user-secret"></i> الهكرز</a></li>
+    <li><a href="#vulns"><i class="fa fa-bug"></i> الثغرات</a></li>
+  </ul>
+  <button class="menu-btn" id="menuBtn"><i class="fa fa-bars"></i></button>
+</nav>
+
+<!-- ===================================================
+     قسم الهيدر
+=================================================== -->
+<section id="home">
+  <div class="hero-content">
+    <div class="hero-badge">&#x2588; SYSTEM ONLINE &#x2588; CYBER ZONE ACTIVE</div>
+
+    <h1 class="hero-title">
+      <span class="glitch g" data-text="الأمن">الأمن</span>
+      <span class="b"> السيبراني</span><br>
+      <span class="p">وفلسفة</span>
+      <span class="g"> الهاكر</span>
+    </h1>
+
+    <p class="hero-sub">
+      استكشف عالم التقنية المتقدمة، فلسفة لينكس، وأخطر الثغرات الرقمية التي غيّرت وجه الإنترنت إلى الأبد.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#linux" class="btn btn-primary">ابدأ الاستكشاف</a>
+      <a href="#vulns" class="btn btn-outline">أخطر الثغرات</a>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">ثغرة مكتشفة</div></div>
+      <div class="stat"><div class="stat-num">$6T</div><div class="stat-label">خسائر سنوية</div></div>
+      <div class="stat"><div class="stat-num">600+</div><div class="stat-label">توزيعة لينكس</div></div>
+      <div class="stat"><div class="stat-num">99%</div><div class="stat-label">سيرفرات تعمل بلينكس</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     قسم لينكس
+=================================================== -->
+<section id="linux">
+  <div class="section-header reveal">
+    <div class="section-tag">// Linux Philosophy</div>
+    <h2 class="section-title">نظام <span>Linux</span> — حرية بلا حدود</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="linux-intro">
+    <div class="reveal">
+      <!-- placeholder: صورة جهاز terminal يعمل على Linux بخلفية خضراء داكنة -->
+      <div class="img-placeholder tall">
+        <i class="fa-brands fa-linux"></i>
+        <strong>[ صورة مقترحة ]</strong>
+        <span>شاشة Terminal تعمل على Linux<br>مع أوامر برمجية خضراء</span>
+        <small>حجم مقترح: 600×400px</small>
+      </div>
+    </div>
+
+    <div class="linux-text reveal">
+      <h3><i class="fa-brands fa-linux" style="color:var(--green)"></i> فلسفة لينكس</h3>
+      <p style="margin-bottom:1rem;">
+        لينكس ليس مجرد نظام تشغيل — إنه <strong style="color:var(--green)">فلسفة حرية رقمية</strong>.
+        وُلد عام 1991 على يد <em>لينوس تورفالدز</em> الذي قرر أن التقنية يجب أن تكون مفتوحة للجميع.
+      </p>
+      <p style="margin-bottom:1rem;">
+        اليوم، يُشغّل لينكس <strong style="color:var(--blue)">+99% من أقوى سيرفرات العالم</strong>،
+        كل أجهزة Android، والحواسب العملاقة، والفضاء الخارجي.
+      </p>
+      <p>
+        قوته الحقيقية تكمن في الكود المفتوح الذي يتيح لأي مطوّر التعديل والبناء عليه — وهذا ما يجعله
+        السلاح المفضل للمحترفين في الأمن السيبراني.
+      </p>
+    </div>
+  </div>
+
+  <!-- بطاقات التوزيعات -->
+  <h3 class="reveal" style="text-align:center;margin-bottom:2rem;color:#fff;font-size:1.3rem;">
+    أفضل التوزيعات للمحترفين
+  </h3>
+
+  <div class="distro-grid">
+    <!-- Kali Linux -->
+    <div class="distro-card reveal">
+      <div class="distro-icon">🐉</div>
+      <div class="distro-name">Kali Linux</div>
+      <div class="distro-desc">التوزيعة الذهبية لاختبار الاختراق والأمن الهجومي</div>
+      <span class="distro-badge badge-red">Offensive Security</span>
+    </div>
+
+    <!-- Arch Linux -->
+    <div class="distro-card reveal">
+      <div class="distro-icon">⚙️</div>
+      <div class="distro-name">Arch Linux</div>
+      <div class="distro-desc">للمحترفين الذين يريدون التحكم الكامل بكل تفصيلة</div>
+      <span class="distro-badge badge-blue">Rolling Release</span>
+    </div>
+
+    <!-- Debian -->
+    <div class="distro-card reveal">
+      <div class="distro-icon">🌀</div>
+      <div class="distro-name">Debian</div>
+      <div class="distro-desc">الأكثر استقراراً — قاعدة معظم التوزيعات الأخرى</div>
+      <span class="distro-badge badge-green">Rock Stable</span>
+    </div>
+
+    <!-- Parrot OS -->
+    <div class="distro-card reveal">
+      <div class="distro-icon">🦜</div>
+      <div class="distro-name">Parrot OS</div>
+      <div class="distro-desc">خفيفة وقوية، مثالية للأمن والخصوصية</div>
+      <span class="distro-badge badge-green">Privacy First</span>
+    </div>
+
+    <!-- Fedora -->
+    <div class="distro-card reveal">
+      <div class="distro-icon">🎩</div>
+      <div class="distro-name">Fedora</div>
+      <div class="distro-desc">أحدث التقنيات في بيئة موثوقة من RedHat</div>
+      <span class="distro-badge badge-blue">Cutting Edge</span>
+    </div>
+
+    <!-- Alpine -->
+    <div class="distro-card reveal">
+      <div class="distro-icon">🏔️</div>
+      <div class="distro-name">Alpine Linux</div>
+      <div class="distro-desc">أصغر توزيعة — ملك عالم Docker والحاويات</div>
+      <span class="distro-badge badge-blue">Minimal</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     قسم الهكرز
+=================================================== -->
+<section id="hackers">
+  <div class="section-header reveal">
+    <div class="section-tag">// Legendary Hackers</div>
+    <h2 class="section-title">أشهر <span>الهكرز</span> في التاريخ</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="hackers-grid">
+
+    <!-- Kevin Mitnick -->
+    <div class="hacker-card reveal">
+      <div class="hacker-img-wrap">
+        <!-- placeholder: صورة بروفايل احترافية بأسلوب سيبربانك للمخترق Kevin Mitnick -->
+        <div class="img-placeholder sq">
+          <i class="fa fa-user-secret"></i>
+          <small>Kevin</small>
+        </div>
+        <div class="hacker-info">
+          <div class="hacker-name">Kevin Mitnick</div>
+          <div class="hacker-alias">// "The Condor"</div>
+          <span class="distro-badge badge-red" style="font-size:.7rem">Most Wanted</span>
+        </div>
+      </div>
+      <div class="hacker-body">
+        أشهر هاكر في التاريخ. اخترق شبكات IBM، Nokia، وموتورولا وهو مراهق. أصبح بعدها
+        أحد أبرز خبراء الأمن السيبراني واستشارياً لكبرى الشركات قبل وفاته عام 2023.
+        <div class="hacker-tags">
+          <span class="hacker-tag">Social Engineering</span>
+          <span class="hacker-tag">Phone Phreaking</span>
+          <span class="hacker-tag">Network Intrusion</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gary McKinnon -->
+    <div class="hacker-card reveal">
+      <div class="hacker-img-wrap">
+        <!-- placeholder: صورة بروفايل سيبربانك للمخترق Gary McKinnon -->
+        <div class="img-placeholder sq">
+          <i class="fa fa-user-secret"></i>
+          <small>Gary</small>
+        </div>
+        <div class="hacker-info">
+          <div class="hacker-name">Gary McKinnon</div>
+          <div class="hacker-alias">// "Solo"</div>
+          <span class="distro-badge badge-blue" style="font-size:.7rem">NASA & Pentagon</span>
+        </div>
+      </div>
+      <div class="hacker-body">
+        البريطاني الذي اخترق 97 شبكة عسكرية أمريكية، من بينها NASA والبنتاغون، باحثاً عن
+        أدلة على الأطباق الطائرة. أحدث أضراراً بـ 700,000 دولار وأصبح قضيته نقطة تحول في قانون الجرائم الإلكترونية.
+        <div class="hacker-tags">
+          <span class="hacker-tag">Military Networks</span>
+          <span class="hacker-tag">UFO Research</span>
+          <span class="hacker-tag">Windows Exploits</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adrian Lamo -->
+    <div class="hacker-card reveal">
+      <div class="hacker-img-wrap">
+        <!-- placeholder: صورة بروفايل سيبربانك للمخترق Adrian Lamo -->
+        <div class="img-placeholder sq">
+          <i class="fa fa-user-secret"></i>
+          <small>Adrian</small>
+        </div>
+        <div class="hacker-info">
+          <div class="hacker-name">Adrian Lamo</div>
+          <div class="hacker-alias">// "The Homeless Hacker"</div>
+          <span class="distro-badge badge-green" style="font-size:.7rem">NYT & Microsoft</span>
+        </div>
+      </div>
+      <div class="hacker-body">
+        اخترق شبكات Microsoft، Yahoo، و New York Times من مقاهي الإنترنت. لُقّب بـ"الهاكر المتشرد"
+        لأنه كان ينتقل بين المدن دون مقر ثابت. أصبح لاحقاً مخبراً للـ FBI في قضايا أمنية كبرى.
+        <div class="hacker-tags">
+          <span class="hacker-tag">Web Application</span>
+          <span class="hacker-tag">SQL Injection</span>
+          <span class="hacker-tag">Media Networks</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Anonymous -->
+    <div class="hacker-card reveal">
+      <div class="hacker-img-wrap">
+        <!-- placeholder: شعار أو رمز جماعة Anonymous بأسلوب فني مظلم -->
+        <div class="img-placeholder sq">
+          <i class="fa fa-mask"></i>
+          <small>Anon</small>
+        </div>
+        <div class="hacker-info">
+          <div class="hacker-name">Anonymous</div>
+          <div class="hacker-alias">// "We Are Legion"</div>
+          <span class="distro-badge badge-red" style="font-size:.7rem">Hacktivist</span>
+        </div>
+      </div>
+      <div class="hacker-body">
+        مجموعة لامركزية من الهاكتيفيست ظهرت عام 2003. شنّت هجمات على حكومات وشركات عملاقة
+        دفاعاً عن حرية الإنترنت. شعارهم الأسطوري: "We are Anonymous. We are Legion. We do not forgive."
+        <div class="hacker-tags">
+          <span class="hacker-tag">DDoS Attacks</span>
+          <span class="hacker-tag">Hacktivism</span>
+          <span class="hacker-tag">Doxing</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================================================
+     قسم الثغرات المليونية
+=================================================== -->
+<section id="vulns">
+  <div class="section-header reveal">
+    <div class="section-tag">// Million Dollar Exploits</div>
+    <h2 class="section-title">الثغرات <span>المليونية</span></h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="vuln-list">
+
+    <!-- WannaCry -->
+    <div class="vuln-item reveal">
+      <div class="vuln-year">2017<small>السنة</small></div>
+      <div>
+        <div class="vuln-name"><i class="fa fa-skull-crossbones" style="color:#ff375f"></i> WannaCry Ransomware</div>
+        <div class="vuln-desc">
+          استغل ثغرة EternalBlue في Windows لينتشر كالنار في الهشيم، مشفّراً ملايين الأجهزة حول العالم.
+          أصاب المستشفيات والبنوك والحكومات في أكثر من 150 دولة خلال ساعات.
+        </div>
+        <div class="damage-bar-wrap">
+          <div class="damage-bar"><div class="damage-fill" style="--w:95%"></div></div>
+        </div>
+        <div class="hacker-tags" style="margin-top:.6rem">
+          <span class="hacker-tag">Ransomware</span>
+          <span class="hacker-tag">EternalBlue</span>
+          <span class="hacker-tag">NSA Exploit</span>
+        </div>
+      </div>
+      <!-- placeholder: صورة رمزية أو لقطة شاشة تظهر رسالة الفدية WannaCry -->
+      <div class="vuln-img-wrap">
+        <div class="img-placeholder short" style="width:100%">
+          <i class="fa fa-skull-crossbones" style="color:#ff375f;font-size:1.5rem"></i>
+          <small>WannaCry Screen<br>650×400px</small>
+        </div>
+      </div>
+      <div class="vuln-damage">
+        <div class="damage-num">$4B</div>
+        <div class="damage-label">حجم الخسائر</div>
+      </div>
+    </div>
+
+    <!-- SolarWinds -->
+    <div class="vuln-item reveal">
+      <div class="vuln-year">2020<small>السنة</small></div>
+      <div>
+        <div class="vuln-name"><i class="fa fa-satellite-dish" style="color:var(--purple)"></i> SolarWinds Hack</div>
+        <div class="vuln-desc">
+          هجوم سلسلة التوريد الأكثر تعقيداً في التاريخ. اخترق المهاجمون تحديثات برنامج Orion المستخدم
+          من قِبل آلاف الشركات والحكومات الأمريكية، بما فيها FBI وNASA.
+        </div>
+        <div class="damage-bar-wrap">
+          <div class="damage-bar"><div class="damage-fill" style="--w:80%"></div></div>
+        </div>
+        <div class="hacker-tags" style="margin-top:.6rem">
+          <span class="hacker-tag">Supply Chain</span>
+          <span class="hacker-tag">APT</span>
+          <span class="hacker-tag">State-Sponsored</span>
+        </div>
+      </div>
+      <div class="vuln-img-wrap">
+        <!-- placeholder: صورة إنفوجرافيك تُظهر انتشار هجوم SolarWinds عبر سلسلة التوريد -->
+        <div class="img-placeholder short" style="width:100%">
+          <i class="fa fa-satellite-dish" style="color:var(--purple);font-size:1.5rem"></i>
+          <small>SolarWinds Chart<br>650×400px</small>
+        </div>
+      </div>
+      <div class="vuln-damage">
+        <div class="damage-num">$100B</div>
+        <div class="damage-label">حجم الخسائر</div>
+      </div>
+    </div>
+
+    <!-- Heartbleed -->
+    <div class="vuln-item reveal">
+      <div class="vuln-year">2014<small>السنة</small></div>
+      <div>
+        <div class="vuln-name"><i class="fa fa-heart-crack" style="color:#ff375f"></i> Heartbleed (CVE-2014-0160)</div>
+        <div class="vuln-desc">
+          ثغرة في مكتبة OpenSSL المستخدمة لتشفير 66% من الإنترنت. سمحت للمهاجمين بقراءة الذاكرة الحساسة
+          مباشرة من السيرفرات — بما فيها كلمات المرور والمفاتيح الخاصة — دون ترك أي أثر.
+        </div>
+        <div class="damage-bar-wrap">
+          <div class="damage-bar"><div class="damage-fill" style="--w:70%"></div></div>
+        </div>
+        <div class="hacker-tags" style="margin-top:.6rem">
+          <span class="hacker-tag">OpenSSL</span>
+          <span class="hacker-tag">Memory Leak</span>
+          <span class="hacker-tag">CVE Critical</span>
+        </div>
+      </div>
+      <div class="vuln-img-wrap">
+        <!-- placeholder: صورة شرح تقني لثغرة Heartbleed مع شعارها المميز (قلب نازف) -->
+        <div class="img-placeholder short" style="width:100%">
+          <i class="fa fa-heart-crack" style="color:#ff375f;font-size:1.5rem"></i>
+          <small>Heartbleed Logo<br>650×400px</small>
+        </div>
+      </div>
+      <div class="vuln-damage">
+        <div class="damage-num">$500M</div>
+        <div class="damage-label">حجم الخسائر</div>
+      </div>
+    </div>
+
+    <!-- Log4Shell -->
+    <div class="vuln-item reveal">
+      <div class="vuln-year">2021<small>السنة</small></div>
+      <div>
+        <div class="vuln-name"><i class="fa fa-fire" style="color:orange"></i> Log4Shell (CVE-2021-44228)</div>
+        <div class="vuln-desc">
+          الثغرة الأكثر خطورة في العقد الأخير. استغلال بسيط في مكتبة Log4j الشهيرة يمنح المهاجم
+          تنفيذ كود عن بُعد على أي سيرفر يستخدمها — وهو ما يشمل ملايين التطبيقات حول العالم.
+        </div>
+        <div class="damage-bar-wrap">
+          <div class="damage-bar"><div class="damage-fill" style="--w:88%"></div></div>
+        </div>
+        <div class="hacker-tags" style="margin-top:.6rem">
+          <span class="hacker-tag">RCE</span>
+          <span class="hacker-tag">Log4j</span>
+          <span class="hacker-tag">Zero-Day</span>
+        </div>
+      </div>
+      <div class="vuln-img-wrap">
+        <!-- placeholder: صورة رمزية لثغرة Log4Shell مع كود Java أو رمز نار رقمي -->
+        <div class="img-placeholder short" style="width:100%">
+          <i class="fa fa-fire" style="color:orange;font-size:1.5rem"></i>
+          <small>Log4Shell Visual<br>650×400px</small>
+        </div>
+      </div>
+      <div class="vuln-damage">
+        <div class="damage-num">$2.8B</div>
+        <div class="damage-label">حجم الخسائر</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================================================
+     الفوتر
+=================================================== -->
+<footer>
+  <div class="footer-logo">&gt;_ CyberZone</div>
+  <nav class="footer-links">
+    <a href="#home">الرئيسية</a>
+    <a href="#linux">لينكس</a>
+    <a href="#hackers">الهكرز</a>
+    <a href="#vulns">الثغرات</a>
+  </nav>
+  <p class="footer-copy">
+    // Built with ❤️ & passion for cybersecurity — 2025 CyberZone
+  </p>
+</footer>
+
+<!-- ===================================================
+     JavaScript
+=================================================== -->
+<script>
+  /* =========================================
+     1. تأثير Matrix Rain في الخلفية
+  ========================================= */
+  const canvas = document.getElementById('matrix-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const chars = 'アイウエオカキクケコABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+  const fontSize = 14;
+  let cols = Math.floor(canvas.width / fontSize);
+  let drops = Array(cols).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = 'rgba(5, 10, 15, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00ff9f';
+    ctx.font = fontSize + 'px Share Tech Mono, monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 45);
+
+  /* =========================================
+     2. تأثير الكشف عند التمرير (Scroll Reveal)
+  ========================================= */
+  const revealEls = document.querySelectorAll('.reveal');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        // تأخير تدريجي لكل عنصر
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealEls.forEach(el => observer.observe(el));
+
+  /* =========================================
+     3. قائمة الجوال
+  ========================================= */
+  const menuBtn   = document.getElementById('menuBtn');
+  const navLinks  = document.getElementById('navLinks');
+
+  menuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
+
+  // إغلاق القائمة عند النقر على رابط
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  /* =========================================
+     4. تأثير تعديل الـ Navbar عند التمرير
+  ========================================= */
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      nav.style.background = 'rgba(5, 10, 15, 0.98)';
+    } else {
+      nav.style.background = 'rgba(5, 10, 15, 0.92)';
+    }
+  });
+</script>
+
+</body>
+</html>
